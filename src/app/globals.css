@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Sisanya ke bawah biarkan saja atau sesuaikan */
+html, body {
+  scroll-behavior: smooth;
+}
