@@ -1,18 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export', // Untuk Cloudflare Pages
+  output: 'export', // Wajib buat Cloudflare Pages
   images: {
-    unoptimized: true, // Wajib untuk Cloudflare Pages gratis
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'drive.google.com', // Izinkan Google Drive
-      },
-      {
-        protocol: 'https',
-        hostname: 'lh3.googleusercontent.com', // Izinkan CDN Google
-      },
-    ],
+    unoptimized: true, // Wajib buat Cloudflare biar gambar lokal muncul
   },
 };
 

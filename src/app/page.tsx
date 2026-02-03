@@ -31,9 +31,6 @@ export default function Home() {
   const [selectedJabatan, setSelectedJabatan] = useState('All');
   const [isScrolled, setIsScrolled] = useState(false);
 
-  // --- FUNGSI HELPER GOOGLE DRIVE ---
-  const driveUrl = (id: string) => `https://drive.google.com/uc?export=view&id=${id}`;
-
   // 1. Fungsi Handle Scroll
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, id: string) => {
     e.preventDefault();
@@ -91,6 +88,7 @@ export default function Home() {
         <div className="container mx-auto flex items-center justify-between px-4">
           <a href="#" onClick={(e) => handleScroll(e, 'beranda')} className={`flex items-center gap-3 font-bold text-xl ${isScrolled ? 'text-blue-600' : 'text-white'}`}>
             <div className="relative h-10 w-10"> 
+               {/* Logo Lokal */}
                <Image 
                  src="/images/Logo-Nav.png" 
                  alt="Logo OSIS" 
@@ -126,7 +124,11 @@ export default function Home() {
 
       {/* --- HERO SECTION --- */}
       <section id="beranda" className="relative flex h-screen items-center justify-center text-center text-white overflow-hidden bg-slate-900">
+        
+        {/* Background Wrapper */}
         <div className="absolute inset-0 z-0 pointer-events-none">
+          {/* Gambar Lokal sebagai Fallback (Muncul sebelum video load) */}
+          {/* Video Youtube Background */}
           <iframe
             className="absolute top-1/2 left-1/2 min-w-[200%] min-h-[200%] -translate-x-1/2 -translate-y-1/2 opacity-60"
             src="https://www.youtube.com/embed/OM88Muxs10w?autoplay=1&mute=1&controls=0&loop=1&playlist=OM88Muxs10w&showinfo=0&rel=0&iv_load_policy=3&disablekb=1&modestbranding=1&start=10"
@@ -137,6 +139,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-b from-slate-900/80 via-slate-900/40 to-slate-900/90"></div>
         </div>
 
+        {/* Konten Hero */}
         <div className="relative z-20 container px-4 mt-[-50px]">
           <motion.div 
             initial={{ opacity: 0, y: 30 }} 
@@ -180,9 +183,9 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="grid gap-12 md:grid-cols-2 items-center">
             <div className="relative h-[400px] w-full overflow-hidden rounded-2xl shadow-2xl group">
-              {/* JANGAN LUPA UPDATE ID IMAGE INI */}
+              {/* Gambar Lokal Tentang Kami */}
               <Image 
-                src={driveUrl('https://drive.google.com/file/d/1hukEYJPS0Yk3doA8UC4knMKFGpN-4_4X/view?usp=drive_link')} 
+                src="/images/tentang.png" 
                 alt="Tentang Kami" 
                 fill 
                 className="object-cover transition duration-500 group-hover:scale-110"
@@ -196,7 +199,6 @@ export default function Home() {
                 OSIS & MPK SMK Negeri 2 Yogyakarta adalah garda terdepan dalam pengembangan karakter siswa. Kami berkomitmen mendukung visi sekolah dalam mencetak lulusan siap kerja.
               </p>
               
-              {/* --- STATISTIK YANG TADI HILANG --- */}
               <div className="grid grid-cols-2 gap-6">
                 <div className="border-l-4 border-yellow-400 pl-4">
                   <h4 className="text-4xl font-black text-slate-800">50+</h4>
@@ -207,14 +209,13 @@ export default function Home() {
                   <p className="text-sm font-medium text-slate-500">Program Kerja</p>
                 </div>
               </div>
-              {/* ---------------------------------- */}
               
             </div>
           </div>
         </div>
       </section>
 
-      {/* --- STRUKTUR ORGANISASI --- */}
+      {/* --- STRUKTUR ORGANISASI (FOLDER PUBLIC) --- */}
       <section id="struktur" className="bg-slate-50 py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-10">
@@ -224,27 +225,28 @@ export default function Home() {
           
           <div className="flex gap-6 overflow-x-auto pb-8 snap-x snap-mandatory px-4 -mx-4 scrollbar-hide">
             {[
-              { title: "Ketua & Wakil Umum", id: "ID_DRIVE_KETUA", desc: "Penanggung Jawab Utama" },
-              { title: "Sekretaris Umum", id: "ID_DRIVE_SEKRETARIS", desc: "Administrasi & Surat Menyurat" },
-              { title: "Bendahara Umum", id: "ID_DRIVE_BENDAHARA", desc: "Manajemen Keuangan" },
-              { title: "Sie Hubungan Masyarakat", id: "ID_DRIVE_HUMAS", desc: "Komunikasi & Publikasi" },
-              { title: "Sie Basecamp", id: "ID_DRIVE_BASECAMP", desc: "Logistik & Rumah Tangga" },
-              { title: "Koordinator Bidang", id: "ID_DRIVE_KOOR", desc: "Supervisi Sekbid 1-6" },
-              { title: "Sekbid 1: Ketuhanan YME", id: "ID_DRIVE_SEKBID1", desc: "Kerohanian & Toleransi" },
-              { title: "Sekbid 2: Bela Negara", id: "ID_DRIVE_SEKBID2", desc: "Budi Pekerti Luhur" },
-              { title: "Sekbid 3: TIK", id: "ID_DRIVE_SEKBID3", desc: "Teknologi & Informasi" },
-              { title: "Sekbid 4: Kewirausahaan", id: "ID_DRIVE_SEKBID4", desc: "Keterampilan & Usaha" },
-              { title: "Sekbid 5: Jasmani & Kesehatan", id: "ID_DRIVE_SEKBID5", desc: "Olahraga & Gizi" },
-              { title: "Sekbid 6: Seni & Budaya", id: "ID_DRIVE_SEKBID6", desc: "Sastra & Kreativitas" },
+              // PASTIKAN NAMA FILE SESUAI DENGAN YANG DI FOLDER PUBLIC/IMAGES/
+              { title: "Ketua & Wakil Umum", image: "/images/ketua.jpg", desc: "Penanggung Jawab Utama" },
+              { title: "Sekretaris Umum", image: "/images/sekretaris.jpg", desc: "Administrasi & Surat Menyurat" },
+              { title: "Bendahara Umum", image: "/images/bendahara.jpg", desc: "Manajemen Keuangan" },
+              { title: "Sie Hubungan Masyarakat", image: "/images/humas.jpg", desc: "Komunikasi & Publikasi" },
+              { title: "Sie Basecamp", image: "/images/basecamp.jpg", desc: "Logistik & Rumah Tangga" },
+              { title: "Koordinator Bidang", image: "/images/koordinator.jpg", desc: "Supervisi Sekbid 1-6" },
+              { title: "Sekbid 1: Ketuhanan YME", image: "/images/sekbid1.jpg", desc: "Kerohanian & Toleransi" },
+              { title: "Sekbid 2: Bela Negara", image: "/images/sekbid2.jpg", desc: "Budi Pekerti Luhur" },
+              { title: "Sekbid 3: TIK", image: "/images/sekbid3.jpg", desc: "Teknologi & Informasi" },
+              { title: "Sekbid 4: Kewirausahaan", image: "/images/sekbid4.jpg", desc: "Keterampilan & Usaha" },
+              { title: "Sekbid 5: Jasmani & Kesehatan", image: "/images/sekbid5.jpg", desc: "Olahraga & Gizi" },
+              { title: "Sekbid 6: Seni & Budaya", image: "/images/sekbid6.jpg", desc: "Sastra & Kreativitas" },
             ].map((item, index) => (
               <div key={index} className="snap-center shrink-0 w-[300px] group bg-white p-4 shadow-xl hover:shadow-2xl transition-all duration-300 border border-slate-200">
                 <div className="relative h-[250px] w-full bg-slate-100 mb-4 overflow-hidden border border-slate-100 shadow-inner">
                   <Image 
-                    src={driveUrl(item.id)} 
+                    src={item.image} 
                     alt={item.title} 
                     fill 
                     className="object-cover transition-transform duration-700 group-hover:scale-110"
-                    unoptimized
+                    unoptimized // Wajib untuk gambar lokal
                   />
                 </div>
                 <div className="text-center px-2">
@@ -268,19 +270,19 @@ export default function Home() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 h-[500px]">
             <div className="col-span-2 row-span-2 relative group overflow-hidden rounded-2xl cursor-pointer">
-              <Image src={driveUrl('ID_DRIVE_GALERI_1')} alt="Utama" fill className="object-cover transition duration-700 group-hover:scale-110" unoptimized />
+              <Image src="/images/galeri-1.jpg" alt="Utama" fill className="object-cover transition duration-700 group-hover:scale-110" unoptimized />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-6">
                 <p className="text-white font-bold text-lg">Classmeeting 2024</p>
               </div>
             </div>
             <div className="col-span-1 row-span-1 relative group overflow-hidden rounded-2xl cursor-pointer">
-              <Image src={driveUrl('ID_DRIVE_GALERI_2')} alt="Musik" fill className="object-cover transition duration-700 group-hover:scale-110" unoptimized />
+              <Image src="/images/galeri-2.jpg" alt="Musik" fill className="object-cover transition duration-700 group-hover:scale-110" unoptimized />
             </div>
             <div className="col-span-1 row-span-1 relative group overflow-hidden rounded-2xl cursor-pointer">
-              <Image src={driveUrl('ID_DRIVE_GALERI_3')} alt="Upacara" fill className="object-cover transition duration-700 group-hover:scale-110" unoptimized />
+              <Image src="/images/galeri-3.jpg" alt="Upacara" fill className="object-cover transition duration-700 group-hover:scale-110" unoptimized />
             </div>
             <div className="col-span-2 md:col-span-2 relative group overflow-hidden rounded-2xl cursor-pointer">
-              <Image src={driveUrl('ID_DRIVE_GALERI_4')} alt="Rapat" fill className="object-cover transition duration-700 group-hover:scale-110" unoptimized />
+              <Image src="/images/galeri-4.jpg" alt="Rapat" fill className="object-cover transition duration-700 group-hover:scale-110" unoptimized />
                <div className="absolute inset-0 bg-gradient-to-t from-blue-900/80 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-4">
                 <p className="text-white font-bold">LDK Pengurus Baru</p>
               </div>
@@ -305,7 +307,7 @@ export default function Home() {
           <div className="grid gap-6 md:grid-cols-3">
             <article className="bg-white rounded-xl shadow-sm hover:shadow-xl transition overflow-hidden group border border-slate-100">
               <div className="h-48 relative overflow-hidden">
-                <Image src={driveUrl('ID_DRIVE_BERITA_1')} alt="Berita 1" fill className="object-cover group-hover:scale-105 transition duration-500" unoptimized />
+                <Image src="/images/berita-1.jpg" alt="Berita 1" fill className="object-cover group-hover:scale-105 transition duration-500" unoptimized />
                 <div className="absolute top-4 left-4 bg-blue-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase flex items-center gap-1">
                   <Calendar size={12} /> Agenda
                 </div>
@@ -319,7 +321,7 @@ export default function Home() {
 
             <article className="bg-white rounded-xl shadow-sm hover:shadow-xl transition overflow-hidden group border border-slate-100">
               <div className="h-48 relative overflow-hidden">
-                <Image src={driveUrl('ID_DRIVE_BERITA_2')} alt="Berita 2" fill className="object-cover group-hover:scale-105 transition duration-500" unoptimized />
+                <Image src="/images/berita-2.jpg" alt="Berita 2" fill className="object-cover group-hover:scale-105 transition duration-500" unoptimized />
                 <div className="absolute top-4 left-4 bg-yellow-400 text-black text-[10px] font-bold px-3 py-1 rounded-full uppercase flex items-center gap-1">
                   <Trophy size={12} /> Prestasi
                 </div>
@@ -333,7 +335,7 @@ export default function Home() {
 
             <article className="bg-white rounded-xl shadow-sm hover:shadow-xl transition overflow-hidden group border border-slate-100">
               <div className="h-48 relative overflow-hidden">
-                <Image src={driveUrl('ID_DRIVE_BERITA_3')} alt="Berita 3" fill className="object-cover group-hover:scale-105 transition duration-500" unoptimized />
+                <Image src="/images/berita-3.jpg" alt="Berita 3" fill className="object-cover group-hover:scale-105 transition duration-500" unoptimized />
                  <div className="absolute top-4 left-4 bg-purple-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase flex items-center gap-1">
                   <Megaphone size={12} /> Info
                 </div>
