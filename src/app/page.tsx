@@ -194,7 +194,7 @@ export default function Home() {
           <div className="grid gap-12 md:grid-cols-2 items-center">
             <div className="relative h-[400px] w-full overflow-hidden rounded-2xl shadow-2xl group">
               <Image 
-                src="/images/tentang-kami.jpg" 
+                src="/images/Tentang-Kami.jpg" 
                 alt="Kegiatan Siswa" 
                 fill 
                 className="object-cover transition duration-500 group-hover:scale-110"
