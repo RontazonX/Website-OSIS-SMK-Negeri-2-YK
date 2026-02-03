@@ -125,17 +125,24 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* --- HERO SECTION --- */}
+      {/* --- HERO SECTION (VIDEO BACKGROUND) --- */}
       <section id="beranda" className="relative flex h-screen items-center justify-center text-center text-white overflow-hidden bg-slate-900">
         
-        {/* BACKGROUND LOKAL */}
+        {/* YOUTUBE BACKGROUND WRAPPER */}
         <div className="absolute inset-0 z-0 pointer-events-none">
           <Image 
-             src="/images/hero-bg.jpg" 
-             alt="SMKN 2 Yogyakarta"
+             src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=2070" 
+             alt=""
              fill
              className="object-cover"
              priority
+          />
+          <iframe
+            className="absolute top-1/2 left-1/2 min-w-[200%] min-h-[200%] -translate-x-1/2 -translate-y-1/2 opacity-60"
+            src="https://www.youtube.com/embed/OM88Muxs10w?autoplay=1&mute=1&controls=0&loop=1&playlist=OM88Muxs10w&showinfo=0&rel=0&iv_load_policy=3&disablekb=1&modestbranding=1&start=10"
+            title="Profil SMKN 2 Yogyakarta"
+            allow="autoplay; encrypted-media" 
+            style={{ pointerEvents: 'none' }}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-slate-900/80 via-slate-900/40 to-slate-900/90"></div>
         </div>
