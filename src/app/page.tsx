@@ -32,7 +32,6 @@ export default function Home() {
   const [isScrolled, setIsScrolled] = useState(false);
 
   // --- FUNGSI HELPER GOOGLE DRIVE ---
-  // Masukkan ID File Google Drive ke sini, otomatis jadi link gambar
   const driveUrl = (id: string) => `https://drive.google.com/uc?export=view&id=${id}`;
 
   // 1. Fungsi Handle Scroll
@@ -92,7 +91,6 @@ export default function Home() {
         <div className="container mx-auto flex items-center justify-between px-4">
           <a href="#" onClick={(e) => handleScroll(e, 'beranda')} className={`flex items-center gap-3 font-bold text-xl ${isScrolled ? 'text-blue-600' : 'text-white'}`}>
             <div className="relative h-10 w-10"> 
-               {/* Logo tetap dari folder public biar cepat loadnya (kecuali mau ganti drive juga) */}
                <Image 
                  src="/images/Logo-Nav.png" 
                  alt="Logo OSIS" 
@@ -126,12 +124,9 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* --- HERO SECTION (YOUTUBE BACKGROUND) --- */}
+      {/* --- HERO SECTION --- */}
       <section id="beranda" className="relative flex h-screen items-center justify-center text-center text-white overflow-hidden bg-slate-900">
-        
-        {/* BACKGROUND WRAPPER */}
         <div className="absolute inset-0 z-0 pointer-events-none">
-          {/* Iframe YouTube (Pastikan ini paling atas di stack z-index kalau mau kelihatan videonya) */}
           <iframe
             className="absolute top-1/2 left-1/2 min-w-[200%] min-h-[200%] -translate-x-1/2 -translate-y-1/2 opacity-60"
             src="https://www.youtube.com/embed/OM88Muxs10w?autoplay=1&mute=1&controls=0&loop=1&playlist=OM88Muxs10w&showinfo=0&rel=0&iv_load_policy=3&disablekb=1&modestbranding=1&start=10"
@@ -142,7 +137,6 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-b from-slate-900/80 via-slate-900/40 to-slate-900/90"></div>
         </div>
 
-        {/* KONTEN HERO */}
         <div className="relative z-20 container px-4 mt-[-50px]">
           <motion.div 
             initial={{ opacity: 0, y: 30 }} 
@@ -186,9 +180,9 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="grid gap-12 md:grid-cols-2 items-center">
             <div className="relative h-[400px] w-full overflow-hidden rounded-2xl shadow-2xl group">
-              {/* GANTI ID DI BAWAH INI DENGAN ID FOTO TENTANG KAMI DI GOOGLE DRIVE */}
+              {/* JANGAN LUPA UPDATE ID IMAGE INI */}
               <Image 
-                src={driveUrl('GANTI_DENGAN_ID_GOOGLE_DRIVE_DISINI')} 
+                src={driveUrl('https://drive.google.com/file/d/1hukEYJPS0Yk3doA8UC4knMKFGpN-4_4X/view?usp=drive_link')} 
                 alt="Tentang Kami" 
                 fill 
                 className="object-cover transition duration-500 group-hover:scale-110"
@@ -201,12 +195,26 @@ export default function Home() {
               <p className="mb-6 text-slate-600 leading-relaxed text-lg">
                 OSIS & MPK SMK Negeri 2 Yogyakarta adalah garda terdepan dalam pengembangan karakter siswa. Kami berkomitmen mendukung visi sekolah dalam mencetak lulusan siap kerja.
               </p>
+              
+              {/* --- STATISTIK YANG TADI HILANG --- */}
+              <div className="grid grid-cols-2 gap-6">
+                <div className="border-l-4 border-yellow-400 pl-4">
+                  <h4 className="text-4xl font-black text-slate-800">50+</h4>
+                  <p className="text-sm font-medium text-slate-500">Pengurus Aktif</p>
+                </div>
+                <div className="border-l-4 border-blue-600 pl-4">
+                  <h4 className="text-4xl font-black text-slate-800">12</h4>
+                  <p className="text-sm font-medium text-slate-500">Program Kerja</p>
+                </div>
+              </div>
+              {/* ---------------------------------- */}
+              
             </div>
           </div>
         </div>
       </section>
 
-      {/* --- STRUKTUR ORGANISASI (GOOGLE DRIVE IMAGES) --- */}
+      {/* --- STRUKTUR ORGANISASI --- */}
       <section id="struktur" className="bg-slate-50 py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-10">
@@ -215,18 +223,13 @@ export default function Home() {
           </div>
           
           <div className="flex gap-6 overflow-x-auto pb-8 snap-x snap-mandatory px-4 -mx-4 scrollbar-hide">
-            
-            {/* TUGAS KAMU: GANTI 'ID_DRIVE_...' DI BAWAH INI DENGAN ID ASLI DARI GOOGLE DRIVE 
-            */}
             {[
               { title: "Ketua & Wakil Umum", id: "ID_DRIVE_KETUA", desc: "Penanggung Jawab Utama" },
               { title: "Sekretaris Umum", id: "ID_DRIVE_SEKRETARIS", desc: "Administrasi & Surat Menyurat" },
               { title: "Bendahara Umum", id: "ID_DRIVE_BENDAHARA", desc: "Manajemen Keuangan" },
               { title: "Sie Hubungan Masyarakat", id: "ID_DRIVE_HUMAS", desc: "Komunikasi & Publikasi" },
-              
               { title: "Sie Basecamp", id: "ID_DRIVE_BASECAMP", desc: "Logistik & Rumah Tangga" },
               { title: "Koordinator Bidang", id: "ID_DRIVE_KOOR", desc: "Supervisi Sekbid 1-6" },
-              
               { title: "Sekbid 1: Ketuhanan YME", id: "ID_DRIVE_SEKBID1", desc: "Kerohanian & Toleransi" },
               { title: "Sekbid 2: Bela Negara", id: "ID_DRIVE_SEKBID2", desc: "Budi Pekerti Luhur" },
               { title: "Sekbid 3: TIK", id: "ID_DRIVE_SEKBID3", desc: "Teknologi & Informasi" },
@@ -236,7 +239,6 @@ export default function Home() {
             ].map((item, index) => (
               <div key={index} className="snap-center shrink-0 w-[300px] group bg-white p-4 shadow-xl hover:shadow-2xl transition-all duration-300 border border-slate-200">
                 <div className="relative h-[250px] w-full bg-slate-100 mb-4 overflow-hidden border border-slate-100 shadow-inner">
-                  {/* Panggil Fungsi driveUrl disini */}
                   <Image 
                     src={driveUrl(item.id)} 
                     alt={item.title} 
@@ -251,12 +253,11 @@ export default function Home() {
                 </div>
               </div>
             ))}
-
           </div>
         </div>
       </section>
 
-      {/* --- GALERI KEGIATAN (GOOGLE DRIVE) --- */}
+      {/* --- GALERI KEGIATAN --- */}
       <section id="galeri" className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
@@ -266,22 +267,18 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 h-[500px]">
-            {/* Foto Besar - Ganti ID! */}
             <div className="col-span-2 row-span-2 relative group overflow-hidden rounded-2xl cursor-pointer">
               <Image src={driveUrl('ID_DRIVE_GALERI_1')} alt="Utama" fill className="object-cover transition duration-700 group-hover:scale-110" unoptimized />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-6">
                 <p className="text-white font-bold text-lg">Classmeeting 2024</p>
               </div>
             </div>
-            {/* Foto Kecil 1 - Ganti ID! */}
             <div className="col-span-1 row-span-1 relative group overflow-hidden rounded-2xl cursor-pointer">
               <Image src={driveUrl('ID_DRIVE_GALERI_2')} alt="Musik" fill className="object-cover transition duration-700 group-hover:scale-110" unoptimized />
             </div>
-            {/* Foto Kecil 2 - Ganti ID! */}
             <div className="col-span-1 row-span-1 relative group overflow-hidden rounded-2xl cursor-pointer">
               <Image src={driveUrl('ID_DRIVE_GALERI_3')} alt="Upacara" fill className="object-cover transition duration-700 group-hover:scale-110" unoptimized />
             </div>
-            {/* Foto Sedang - Ganti ID! */}
             <div className="col-span-2 md:col-span-2 relative group overflow-hidden rounded-2xl cursor-pointer">
               <Image src={driveUrl('ID_DRIVE_GALERI_4')} alt="Rapat" fill className="object-cover transition duration-700 group-hover:scale-110" unoptimized />
                <div className="absolute inset-0 bg-gradient-to-t from-blue-900/80 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-4">
@@ -292,7 +289,7 @@ export default function Home() {
         </div>
       </section>
 
-     {/* --- BERITA & AGENDA (GOOGLE DRIVE) --- */}
+     {/* --- BERITA & AGENDA --- */}
       <section id="berita" className="py-20 bg-slate-50 border-t border-slate-200">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
@@ -306,8 +303,6 @@ export default function Home() {
           </div>
 
           <div className="grid gap-6 md:grid-cols-3">
-            
-            {/* Berita 1 - Ganti ID! */}
             <article className="bg-white rounded-xl shadow-sm hover:shadow-xl transition overflow-hidden group border border-slate-100">
               <div className="h-48 relative overflow-hidden">
                 <Image src={driveUrl('ID_DRIVE_BERITA_1')} alt="Berita 1" fill className="object-cover group-hover:scale-105 transition duration-500" unoptimized />
@@ -322,7 +317,6 @@ export default function Home() {
               </div>
             </article>
 
-            {/* Berita 2 - Ganti ID! */}
             <article className="bg-white rounded-xl shadow-sm hover:shadow-xl transition overflow-hidden group border border-slate-100">
               <div className="h-48 relative overflow-hidden">
                 <Image src={driveUrl('ID_DRIVE_BERITA_2')} alt="Berita 2" fill className="object-cover group-hover:scale-105 transition duration-500" unoptimized />
@@ -337,7 +331,6 @@ export default function Home() {
               </div>
             </article>
 
-            {/* Berita 3 - Ganti ID! */}
             <article className="bg-white rounded-xl shadow-sm hover:shadow-xl transition overflow-hidden group border border-slate-100">
               <div className="h-48 relative overflow-hidden">
                 <Image src={driveUrl('ID_DRIVE_BERITA_3')} alt="Berita 3" fill className="object-cover group-hover:scale-105 transition duration-500" unoptimized />
@@ -351,7 +344,6 @@ export default function Home() {
                 <p className="text-slate-500 text-sm line-clamp-2">Ingin berkontribusi lebih untuk sekolah? Daftarkan dirimu sekarang juga!</p>
               </div>
             </article>
-            
           </div>
         </div>
       </section>
