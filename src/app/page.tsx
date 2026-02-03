@@ -7,8 +7,7 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { 
   Search, Instagram, Youtube, User, 
-  Flag, Send, ArrowRight,
-  Calendar, Trophy, Megaphone
+  Send, ArrowRight, Calendar, Trophy, Megaphone
 } from 'lucide-react';
 
 // --- Tipe Data ---
@@ -32,14 +31,23 @@ export default function Home() {
   const [selectedJabatan, setSelectedJabatan] = useState('All');
   const [isScrolled, setIsScrolled] = useState(false);
 
-  // 1. Efek Scroll Navbar
+  // 1. Fungsi Handle Scroll (Agar URL tetap bersih tanpa #)
+  const handleScroll = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, id: string) => {
+    e.preventDefault(); // Mencegah URL berubah jadi #...
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  // 2. Efek Scroll Navbar (Transparan ke Putih)
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const handleScrollEvent = () => setIsScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScrollEvent);
+    return () => window.removeEventListener('scroll', handleScrollEvent);
   }, []);
 
-  // 2. Fetch Data dari Supabase
+  // 3. Fetch Data dari Supabase
   useEffect(() => {
     const fetchData = async () => {
       const { data, error } = await supabase
@@ -56,7 +64,7 @@ export default function Home() {
     fetchData();
   }, []);
 
-  // 3. Logic Filter & Search
+  // 4. Logic Filter & Search
   useEffect(() => {
     let result = members;
     if (searchQuery) {
@@ -75,27 +83,23 @@ export default function Home() {
   return (
     <main className="font-sans text-slate-800">
       
-    {/* --- NAVBAR --- */}
+      {/* --- NAVBAR --- */}
       <nav className={`fixed top-0 z-50 w-full transition-all duration-300 ${isScrolled ? 'bg-white shadow-md py-3' : 'bg-transparent py-5'}`}>
         <div className="container mx-auto flex items-center justify-between px-4">
           
           {/* LOGO & NAMA */}
-          <a href="#" className={`flex items-center gap-3 font-bold text-xl ${isScrolled ? 'text-blue-600' : 'text-white'}`}>
-            
-            {/* Bagian Logo Image */}
+          <a href="#" onClick={(e) => handleScroll(e, 'beranda')} className={`flex items-center gap-3 font-bold text-xl ${isScrolled ? 'text-blue-600' : 'text-white'}`}>
             <div className="relative h-10 w-10"> 
-               {/* Pastikan file logo.png ada di folder public/images/ */}
+               {/* Pastikan file 'Logo-Nav.png' ada di folder public/images/ */}
                <Image 
                  src="/images/Logo-Nav.png"
                  alt="Logo OSIS" 
                  fill
                  className="object-contain" 
-                 priority // Biar logo dimuat duluan
+                 priority
                />
             </div>
-
-            {/* Bagian Teks (Tetap Font Lama) */}
-            <span>OSIS SMK Negeri 2 Yogyakarta</span>
+            <span>OSIS <span className="font-light">SKADUTA</span></span>
           </a>
           
           {/* Menu Desktop */}
@@ -104,36 +108,34 @@ export default function Home() {
               <a 
                 key={item} 
                 href={`#${item.toLowerCase()}`} 
+                onClick={(e) => handleScroll(e, item.toLowerCase())} // Panggil fungsi scroll
                 className={`text-sm font-bold uppercase tracking-wide transition hover:text-yellow-400 ${isScrolled ? 'text-slate-600' : 'text-white/90'}`}
               >
                 {item}
               </a>
             ))}
-            <a href="#aspirasi" className="rounded-full bg-blue-600 px-6 py-2 text-sm font-bold text-white transition hover:bg-blue-700 shadow-lg shadow-blue-600/30">
+            <a 
+              href="#aspirasi" 
+              onClick={(e) => handleScroll(e, 'aspirasi')}
+              className="rounded-full bg-blue-600 px-6 py-2 text-sm font-bold text-white transition hover:bg-blue-700 shadow-lg shadow-blue-600/30"
+            >
               Hubungi Kami
             </a>
           </div>
         </div>
       </nav>
 
-      {/* --- HERO SECTION (VIDEO BACKGROUND) --- */}
+      {/* --- HERO SECTION --- */}
       <section id="beranda" className="relative flex h-screen items-center justify-center text-center text-white overflow-hidden bg-slate-900">
         
-        {/* YOUTUBE BACKGROUND WRAPPER */}
+        {/* BACKGROUND LOKAL */}
         <div className="absolute inset-0 z-0 pointer-events-none">
           <Image 
-             src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=2070" 
-             alt=""
+             src="/images/hero-bg.jpg" 
+             alt="SMKN 2 Yogyakarta"
              fill
              className="object-cover"
              priority
-          />
-          <iframe
-            className="absolute top-1/2 left-1/2 min-w-[200%] min-h-[200%] -translate-x-1/2 -translate-y-1/2 opacity-60"
-            src="https://www.youtube.com/embed/OM88Muxs10w?autoplay=1&mute=1&controls=0&loop=1&playlist=OM88Muxs10w&showinfo=0&rel=0&iv_load_policy=3&disablekb=1&modestbranding=1&start=10"
-            title="Profil SMKN 2 Yogyakarta"
-            allow="autoplay; encrypted-media" 
-            style={{ pointerEvents: 'none' }}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-slate-900/80 via-slate-900/40 to-slate-900/90"></div>
         </div>
@@ -145,8 +147,6 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.8 }}
           >
-  
-
             <h1 className="mb-4 text-4xl font-extrabold md:text-6xl lg:text-7xl drop-shadow-2xl leading-tight">
               Selamat Datang di <br/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">
@@ -159,11 +159,19 @@ export default function Home() {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-5 justify-center">
-              <a href="#anggota" className="group relative overflow-hidden rounded-full bg-blue-600 px-8 py-3.5 text-lg font-bold text-white transition-all hover:scale-105 hover:bg-blue-500 hover:shadow-[0_0_30px_rgba(37,99,235,0.4)]">
+              <a 
+                href="#anggota" 
+                onClick={(e) => handleScroll(e, 'anggota')}
+                className="group relative overflow-hidden rounded-full bg-blue-600 px-8 py-3.5 text-lg font-bold text-white transition-all hover:scale-105 hover:bg-blue-500 hover:shadow-[0_0_30px_rgba(37,99,235,0.4)]"
+              >
                 <span className="relative z-10">Lihat Anggota</span>
                 <div className="absolute inset-0 -translate-x-full group-hover:translate-x-0 bg-white/20 transition-transform duration-300 skew-x-12"></div>
               </a>
-              <a href="#tentang" className="group rounded-full bg-white/5 backdrop-blur-sm border border-white/20 px-8 py-3.5 text-lg font-bold text-white transition-all hover:bg-white/10 hover:border-white/40 hover:scale-105">
+              <a 
+                href="#tentang" 
+                onClick={(e) => handleScroll(e, 'tentang')}
+                className="group rounded-full bg-white/5 backdrop-blur-sm border border-white/20 px-8 py-3.5 text-lg font-bold text-white transition-all hover:bg-white/10 hover:border-white/40 hover:scale-105"
+              >
                 Tentang Kami
               </a>
             </div>
@@ -185,7 +193,6 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="grid gap-12 md:grid-cols-2 items-center">
             <div className="relative h-[400px] w-full overflow-hidden rounded-2xl shadow-2xl group">
-              {/* Gambar Lokal Tentang Kami */}
               <Image 
                 src="/images/tentang-kami.jpg" 
                 alt="Kegiatan Siswa" 
@@ -215,7 +222,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* --- STRUKTUR ORGANISASI (SCROLL HORIZONTAL + LOCAL IMAGES) --- */}
+      {/* --- STRUKTUR ORGANISASI (SCROLL HORIZONTAL) --- */}
       <section id="struktur" className="bg-slate-50 py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-10">
@@ -248,7 +255,7 @@ export default function Home() {
                     alt={item.title} 
                     fill 
                     className="object-cover transition-transform duration-700 group-hover:scale-110"
-                    unoptimized // Biar gak error kalau file lokal
+                    unoptimized
                   />
                 </div>
                 <div className="text-center px-2">
@@ -262,7 +269,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* --- GALERI KEGIATAN (LOCAL IMAGES) --- */}
+      {/* --- GALERI KEGIATAN --- */}
       <section id="galeri" className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
@@ -303,7 +310,7 @@ export default function Home() {
         </div>
       </section>
 
-     {/* --- BERITA & AGENDA (LOCAL IMAGES) --- */}
+     {/* --- BERITA & AGENDA --- */}
       <section id="berita" className="py-20 bg-slate-50 border-t border-slate-200">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
@@ -318,7 +325,6 @@ export default function Home() {
 
           <div className="grid gap-6 md:grid-cols-3">
             
-            {/* Berita 1 */}
             <article className="bg-white rounded-xl shadow-sm hover:shadow-xl transition overflow-hidden group border border-slate-100">
               <div className="h-48 relative overflow-hidden">
                 <Image src="/images/berita-1.jpg" alt="Berita 1" fill className="object-cover group-hover:scale-105 transition duration-500" unoptimized />
@@ -333,7 +339,6 @@ export default function Home() {
               </div>
             </article>
 
-            {/* Berita 2 */}
             <article className="bg-white rounded-xl shadow-sm hover:shadow-xl transition overflow-hidden group border border-slate-100">
               <div className="h-48 relative overflow-hidden">
                 <Image src="/images/berita-2.jpg" alt="Berita 2" fill className="object-cover group-hover:scale-105 transition duration-500" unoptimized />
@@ -348,7 +353,6 @@ export default function Home() {
               </div>
             </article>
 
-            {/* Berita 3 */}
             <article className="bg-white rounded-xl shadow-sm hover:shadow-xl transition overflow-hidden group border border-slate-100">
               <div className="h-48 relative overflow-hidden">
                 <Image src="/images/berita-3.jpg" alt="Berita 3" fill className="object-cover group-hover:scale-105 transition duration-500" unoptimized />
@@ -480,8 +484,8 @@ export default function Home() {
             <div>
               <h5 className="mb-4 text-lg font-bold">Tautan Cepat</h5>
               <ul className="space-y-2 text-sm text-slate-400">
-                <li><a href="#beranda" className="hover:text-white transition">Beranda</a></li>
-                <li><a href="#anggota" className="hover:text-white transition">Database Anggota</a></li>
+                <li><a href="#beranda" onClick={(e) => handleScroll(e, 'beranda')} className="hover:text-white transition">Beranda</a></li>
+                <li><a href="#anggota" onClick={(e) => handleScroll(e, 'anggota')} className="hover:text-white transition">Database Anggota</a></li>
                 <li><a href="#" className="hover:text-white transition">Recruitment</a></li>
               </ul>
             </div>
