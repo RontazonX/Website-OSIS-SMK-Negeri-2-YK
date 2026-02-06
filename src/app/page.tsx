@@ -137,7 +137,7 @@ export default function Home() {
                  priority
                />
             </div>
-            <span>OSIS <span className="font-light">SKADUTA</span></span>
+            <span>OSIS MPK<span className="font-light">SKADUTA</span></span>
           </a>
           
           <div className="hidden md:flex items-center gap-8">
@@ -192,7 +192,7 @@ export default function Home() {
             <h1 className="mb-4 text-4xl font-extrabold md:text-6xl lg:text-7xl drop-shadow-2xl leading-tight">
               Selamat Datang di <br/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">
-                Website Resmi OSIS SKADUTA
+                Website Resmi OSIS & MPK SKADUTA
               </span>
             </h1>
             <p className="mx-auto mb-10 max-w-2xl text-lg text-slate-300 drop-shadow-md font-light leading-relaxed">
@@ -226,7 +226,7 @@ export default function Home() {
             <div className="relative h-[400px] w-full overflow-hidden rounded-2xl shadow-2xl group">
               {/* FOLDER PUBLIC */}
               <Image 
-                src="/images/tentang.jpg" 
+                src="/images/tentang-kami.png" 
                 alt="Tentang Kami" 
                 fill 
                 className="object-cover transition duration-500 group-hover:scale-110"
