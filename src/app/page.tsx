@@ -226,7 +226,7 @@ export default function Home() {
             <div className="relative h-[400px] w-full overflow-hidden rounded-2xl shadow-2xl group">
               {/* FOLDER PUBLIC */}
               <Image 
-                src="/images/tentang-kami.png" 
+                src="/images/Tentang-Kami.png" 
                 alt="Tentang Kami" 
                 fill 
                 className="object-cover transition duration-500 group-hover:scale-110"
