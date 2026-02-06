@@ -1,16 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
+  output: 'export', // Wajib buat Cloudflare Pages
   images: {
-    unoptimized: true,
-    remotePatterns: [
-      {
-        protocol: 'https',
-        // Ganti tanda bintang (*) dengan project ID supabase kamu jika mau lebih spesifik
-        // Tapi pakai hostname ini sudah cukup aman
-        hostname: '*https://uufhbsxihllqxlmhcupz.supabase.co', 
-      },
-    ],
+    unoptimized: true, // Wajib buat Cloudflare biar gambar lokal muncul
   },
 };
 
