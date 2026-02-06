@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { 
   Search, Instagram, Youtube, User, 
-  Send, ArrowRight, Calendar, Trophy, Megaphone
+  Send, ArrowRight, Calendar, Trophy, Megaphone, Loader2
 } from 'lucide-react';
 
 // --- Tipe Data ---
@@ -23,13 +23,21 @@ interface Member {
 }
 
 export default function Home() {
-  // --- STATE LOGIC ---
+  // --- STATE LOGIC UTAMA ---
   const [members, setMembers] = useState<Member[]>([]);
   const [filteredMembers, setFilteredMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedJabatan, setSelectedJabatan] = useState('All');
   const [isScrolled, setIsScrolled] = useState(false);
+
+  // --- STATE KHUSUS ASPIRASI ---
+  const [loadingAspirasi, setLoadingAspirasi] = useState(false);
+  const [formAspirasi, setFormAspirasi] = useState({
+    nama: '',
+    kelas: '',
+    pesan: ''
+  });
 
   // 1. Fungsi Handle Scroll
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, id: string) => {
@@ -40,14 +48,46 @@ export default function Home() {
     }
   };
 
-  // 2. Efek Scroll Navbar
+  // 2. Fungsi Kirim Aspirasi (Ke Database Supabase)
+  const handleKirimAspirasi = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formAspirasi.pesan.trim()) {
+      alert("Mohon isi pesan aspirasi kamu ya!");
+      return;
+    }
+
+    setLoadingAspirasi(true);
+
+    try {
+      const { error } = await supabase.from('aspirations').insert([
+        {
+          nama: formAspirasi.nama || 'Anonim',
+          kelas: formAspirasi.kelas || '-',
+          pesan: formAspirasi.pesan
+        }
+      ]);
+
+      if (error) throw error;
+
+      alert("Terima kasih! Aspirasi kamu berhasil dikirim.");
+      setFormAspirasi({ nama: '', kelas: '', pesan: '' }); 
+
+    } catch (error: any) {
+      alert("Gagal mengirim aspirasi: " + error.message);
+    } finally {
+      setLoadingAspirasi(false);
+    }
+  };
+
+  // 3. Efek Scroll Navbar
   useEffect(() => {
     const handleScrollEvent = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScrollEvent);
     return () => window.removeEventListener('scroll', handleScrollEvent);
   }, []);
 
-  // 3. Fetch Data Supabase
+  // 4. Fetch Data Database Anggota
   useEffect(() => {
     const fetchData = async () => {
       const { data, error } = await supabase
@@ -64,7 +104,7 @@ export default function Home() {
     fetchData();
   }, []);
 
-  // 4. Logic Filter
+  // 5. Logic Filter
   useEffect(() => {
     let result = members;
     if (searchQuery) {
@@ -88,7 +128,7 @@ export default function Home() {
         <div className="container mx-auto flex items-center justify-between px-4">
           <a href="#" onClick={(e) => handleScroll(e, 'beranda')} className={`flex items-center gap-3 font-bold text-xl ${isScrolled ? 'text-blue-600' : 'text-white'}`}>
             <div className="relative h-10 w-10"> 
-               {/* Logo Lokal */}
+               {/* FOLDER PUBLIC */}
                <Image 
                  src="/images/Logo-Nav.png" 
                  alt="Logo OSIS" 
@@ -124,11 +164,15 @@ export default function Home() {
 
       {/* --- HERO SECTION --- */}
       <section id="beranda" className="relative flex h-screen items-center justify-center text-center text-white overflow-hidden bg-slate-900">
-        
-        {/* Background Wrapper */}
         <div className="absolute inset-0 z-0 pointer-events-none">
-          {/* Gambar Lokal sebagai Fallback (Muncul sebelum video load) */}
-          {/* Video Youtube Background */}
+          {/* FOLDER PUBLIC */}
+          <Image 
+             src="/images/hero-bg.jpg" 
+             alt=""
+             fill
+             className="object-cover opacity-50"
+             priority
+          />
           <iframe
             className="absolute top-1/2 left-1/2 min-w-[200%] min-h-[200%] -translate-x-1/2 -translate-y-1/2 opacity-60"
             src="https://www.youtube.com/embed/OM88Muxs10w?autoplay=1&mute=1&controls=0&loop=1&playlist=OM88Muxs10w&showinfo=0&rel=0&iv_load_policy=3&disablekb=1&modestbranding=1&start=10"
@@ -139,7 +183,6 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-b from-slate-900/80 via-slate-900/40 to-slate-900/90"></div>
         </div>
 
-        {/* Konten Hero */}
         <div className="relative z-20 container px-4 mt-[-50px]">
           <motion.div 
             initial={{ opacity: 0, y: 30 }} 
@@ -152,11 +195,9 @@ export default function Home() {
                 Website Resmi OSIS SKADUTA
               </span>
             </h1>
-            
             <p className="mx-auto mb-10 max-w-2xl text-lg text-slate-300 drop-shadow-md font-light leading-relaxed">
               Mewujudkan Generasi Skaduta yang Berkarakter, Kompeten, dan Berintegritas melalui kolaborasi nyata.
             </p>
-            
             <div className="flex flex-col sm:flex-row gap-5 justify-center">
               <a 
                 href="#anggota" 
@@ -183,9 +224,9 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="grid gap-12 md:grid-cols-2 items-center">
             <div className="relative h-[400px] w-full overflow-hidden rounded-2xl shadow-2xl group">
-              {/* Gambar Lokal Tentang Kami */}
+              {/* FOLDER PUBLIC */}
               <Image 
-                src="/images/Tentang-Kami.png" 
+                src="/images/tentang.jpg" 
                 alt="Tentang Kami" 
                 fill 
                 className="object-cover transition duration-500 group-hover:scale-110"
@@ -209,23 +250,22 @@ export default function Home() {
                   <p className="text-sm font-medium text-slate-500">Program Kerja</p>
                 </div>
               </div>
-              
+
             </div>
           </div>
         </div>
       </section>
 
-      {/* --- STRUKTUR ORGANISASI (FOLDER PUBLIC) --- */}
+      {/* --- STRUKTUR ORGANISASI (PUBLIC FOLDER) --- */}
       <section id="struktur" className="bg-slate-50 py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-10">
             <h6 className="mb-2 text-sm font-bold uppercase text-blue-600 tracking-widest">Organigram</h6>
             <h2 className="text-3xl font-bold text-slate-900">Struktur Pengurus OSIS</h2>
           </div>
-          
           <div className="flex gap-6 overflow-x-auto pb-8 snap-x snap-mandatory px-4 -mx-4 scrollbar-hide">
             {[
-              // PASTIKAN NAMA FILE SESUAI DENGAN YANG DI FOLDER PUBLIC/IMAGES/
+              // PASTIKAN FILE ADA DI FOLDER public/images/
               { title: "Ketua & Wakil Umum", image: "/images/ketua.jpg", desc: "Penanggung Jawab Utama" },
               { title: "Sekretaris Umum", image: "/images/sekretaris.jpg", desc: "Administrasi & Surat Menyurat" },
               { title: "Bendahara Umum", image: "/images/bendahara.jpg", desc: "Manajemen Keuangan" },
@@ -241,12 +281,13 @@ export default function Home() {
             ].map((item, index) => (
               <div key={index} className="snap-center shrink-0 w-[300px] group bg-white p-4 shadow-xl hover:shadow-2xl transition-all duration-300 border border-slate-200">
                 <div className="relative h-[250px] w-full bg-slate-100 mb-4 overflow-hidden border border-slate-100 shadow-inner">
+                  {/* Panggil dari path lokal */}
                   <Image 
                     src={item.image} 
                     alt={item.title} 
                     fill 
                     className="object-cover transition-transform duration-700 group-hover:scale-110"
-                    unoptimized // Wajib untuk gambar lokal
+                    unoptimized 
                   />
                 </div>
                 <div className="text-center px-2">
@@ -259,7 +300,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* --- GALERI KEGIATAN --- */}
+      {/* --- GALERI KEGIATAN (PUBLIC FOLDER) --- */}
       <section id="galeri" className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
@@ -267,7 +308,6 @@ export default function Home() {
             <h2 className="text-3xl font-bold text-slate-900">Galeri Kegiatan Skaduta</h2>
             <p className="text-slate-500 mt-2">Momen-momen seru yang tak terlupakan.</p>
           </div>
-
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 h-[500px]">
             <div className="col-span-2 row-span-2 relative group overflow-hidden rounded-2xl cursor-pointer">
               <Image src="/images/galeri-1.jpg" alt="Utama" fill className="object-cover transition duration-700 group-hover:scale-110" unoptimized />
@@ -291,7 +331,7 @@ export default function Home() {
         </div>
       </section>
 
-     {/* --- BERITA & AGENDA --- */}
+     {/* --- BERITA & AGENDA (PUBLIC FOLDER) --- */}
       <section id="berita" className="py-20 bg-slate-50 border-t border-slate-200">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
@@ -303,7 +343,6 @@ export default function Home() {
               Lihat Arsip
             </a>
           </div>
-
           <div className="grid gap-6 md:grid-cols-3">
             <article className="bg-white rounded-xl shadow-sm hover:shadow-xl transition overflow-hidden group border border-slate-100">
               <div className="h-48 relative overflow-hidden">
@@ -318,7 +357,6 @@ export default function Home() {
                 <p className="text-slate-500 text-sm line-clamp-2">Jangan lupa gunakan hak pilihmu! Saksikan orasi kandidat di lapangan utama.</p>
               </div>
             </article>
-
             <article className="bg-white rounded-xl shadow-sm hover:shadow-xl transition overflow-hidden group border border-slate-100">
               <div className="h-48 relative overflow-hidden">
                 <Image src="/images/berita-2.jpg" alt="Berita 2" fill className="object-cover group-hover:scale-105 transition duration-500" unoptimized />
@@ -332,7 +370,6 @@ export default function Home() {
                 <p className="text-slate-500 text-sm line-clamp-2">Tim Robotik Skaduta kembali mengharumkan nama sekolah di kancah nasional.</p>
               </div>
             </article>
-
             <article className="bg-white rounded-xl shadow-sm hover:shadow-xl transition overflow-hidden group border border-slate-100">
               <div className="h-48 relative overflow-hidden">
                 <Image src="/images/berita-3.jpg" alt="Berita 3" fill className="object-cover group-hover:scale-105 transition duration-500" unoptimized />
@@ -354,13 +391,11 @@ export default function Home() {
       <section id="anggota" className="py-20 relative overflow-hidden bg-white">
         <div className="absolute top-0 left-0 w-64 h-64 bg-yellow-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 -translate-x-1/2"></div>
         <div className="absolute bottom-0 right-0 w-64 h-64 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 translate-x-1/2"></div>
-
         <div className="container mx-auto px-4 relative z-10">
           <div className="mb-10 text-center">
             <h2 className="text-3xl font-bold text-slate-900">Database Anggota</h2>
             <p className="text-slate-500">Cari teman atau pengurus favoritmu di sini</p>
           </div>
-
           <div className="mx-auto mb-12 max-w-4xl rounded-2xl bg-white p-4 shadow-xl border border-slate-100">
             <div className="flex flex-col gap-4 md:flex-row">
               <div className="relative flex-1">
@@ -390,7 +425,6 @@ export default function Home() {
               </div>
             </div>
           </div>
-
           {loading ? (
              <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {[...Array(4)].map((_, i) => (
@@ -428,21 +462,48 @@ export default function Home() {
               Punya ide cemerlang untuk Skaduta? Sampaikan suaramu di sini, identitasmu aman.
             </p>
 
-            <form className="rounded-2xl bg-white p-8 shadow-xl text-left border border-slate-100">
+            <form onSubmit={handleKirimAspirasi} className="rounded-2xl bg-white p-8 shadow-xl text-left border border-slate-100">
               <div className="mb-6">
                 <label className="mb-2 block text-sm font-bold text-slate-700">Nama (Boleh Samaran)</label>
-                <input type="text" placeholder="Siswa Skaduta" className="w-full rounded-lg border border-slate-300 p-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" />
+                <input 
+                  type="text" 
+                  value={formAspirasi.nama}
+                  onChange={(e) => setFormAspirasi({...formAspirasi, nama: e.target.value})}
+                  placeholder="Siswa Skaduta" 
+                  className="w-full rounded-lg border border-slate-300 p-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" 
+                />
               </div>
               <div className="mb-6">
                 <label className="mb-2 block text-sm font-bold text-slate-700">Kelas / Jurusan</label>
-                <input type="text" placeholder="Contoh: XI SIJA 1" className="w-full rounded-lg border border-slate-300 p-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" />
+                <input 
+                  type="text" 
+                  value={formAspirasi.kelas}
+                  onChange={(e) => setFormAspirasi({...formAspirasi, kelas: e.target.value})}
+                  placeholder="Contoh: XI SIJA 1" 
+                  className="w-full rounded-lg border border-slate-300 p-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" 
+                />
               </div>
               <div className="mb-6">
-                <label className="mb-2 block text-sm font-bold text-slate-700">Pesan Aspirasi</label>
-                <textarea rows={4} placeholder="Tulis aspirasimu..." className="w-full rounded-lg border border-slate-300 p-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"></textarea>
+                <label className="mb-2 block text-sm font-bold text-slate-700">Pesan Aspirasi <span className="text-red-500">*</span></label>
+                <textarea 
+                  rows={4} 
+                  value={formAspirasi.pesan}
+                  onChange={(e) => setFormAspirasi({...formAspirasi, pesan: e.target.value})}
+                  placeholder="Tulis aspirasimu..." 
+                  className="w-full rounded-lg border border-slate-300 p-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+                  required
+                ></textarea>
               </div>
-              <button type="button" className="w-full rounded-lg bg-blue-600 py-3 font-bold text-white transition hover:bg-blue-700 flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30">
-                <Send size={18} /> Kirim Aspirasi
+              <button 
+                type="submit" 
+                disabled={loadingAspirasi}
+                className="w-full rounded-lg bg-blue-600 py-3 font-bold text-white transition hover:bg-blue-700 flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                {loadingAspirasi ? (
+                  <> <Loader2 className="animate-spin" size={18} /> Mengirim... </>
+                ) : (
+                  <> <Send size={18} /> Kirim Aspirasi </>
+                )}
               </button>
             </form>
           </div>
